@@ -70,6 +70,13 @@
     // 设置样式
     datePicker.datePickerMode = UIDatePickerModeDate;
     
+    
+    // 这句代码是为了设置最小可以选中的时间是当前日期
+    datePicker.minimumDate = [NSDate date];  // --> 不能把这句代码放在监听方法里面,飞则没有效果
+    // 也可以设置最大选择日期 --> 从现在到未来一周内的时间限制
+    datePicker.maximumDate = [NSDate dateWithTimeIntervalSinceNow:7 * 24 * 60 * 60];
+    
+    
     // 监听事件
     [datePicker addTarget:self action:@selector(timeChange:) forControlEvents:UIControlEventValueChanged];
     
