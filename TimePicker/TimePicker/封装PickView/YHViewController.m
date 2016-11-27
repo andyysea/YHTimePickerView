@@ -7,6 +7,7 @@
 //
 
 #import "YHViewController.h"
+#import "YHPickerView.h"
 
 @interface YHViewController ()
 
@@ -20,7 +21,8 @@
     UIPickerView;
     UIDatePicker;
     
-    
+    YHPickerView *pickerView = [[YHPickerView alloc] initDatePickerWithDate:[NSDate date] datePickerMode:UIDatePickerModeDate isHaveNavControler:YES];
+    [pickerView show];
 }
 
 - (void)didReceiveMemoryWarning {
