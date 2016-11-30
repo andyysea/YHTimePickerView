@@ -13,6 +13,17 @@
 
 
 /**
+ 通过plistName添加一个pickerView
+
+ @param array               需要显示的数据
+ @param isHaveNavController 是否在NavController之内
+
+ @return 带有toolbar的pickerView
+ */
+- (instancetype)initPickerViewWithArray:(NSArray *)array isHaveNavController:(BOOL)isHaveNavController;
+
+
+/**
  通过时间创建一个DatePicker
  
  @param defaulDate         默认选中时间
