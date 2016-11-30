@@ -92,7 +92,9 @@
             break;
     }
     
-    
+    _pickerView.tintColor = [UIColor redColor];
+    _pickerView.barTintColor = [UIColor orangeColor];
+    _pickerView.pickerViewColor = [UIColor blueColor];
     
     [_pickerView show];
     

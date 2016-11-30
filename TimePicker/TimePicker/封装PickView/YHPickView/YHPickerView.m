@@ -373,9 +373,22 @@
     [self remove];
 }
 
+#pragma mark - 重写属性setter方法设置颜色
+- (void)setTintColor:(UIColor *)tintColor {
+    _tintColor = tintColor;
+    _toolbar.tintColor = tintColor;
+}
 
+- (void)setPickerViewColor:(UIColor *)pickerViewColor {
+    _pickerView.backgroundColor = pickerViewColor;
+}
 
+- (void)setBarTintColor:(UIColor *)barTintColor {
+    _toolbar.barTintColor = barTintColor;
+}
 
-
+- (void)dealloc {
+    NSLog(@"go die");
+}
 
 @end
