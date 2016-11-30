@@ -9,8 +9,12 @@
 #import "YHPickerView.h"
 
 #define YHToolbarHeight 40
+#define Screen_Width [UIScreen mainScreen].bounds.size.width
+
 
 @interface YHPickerView () <UIPickerViewDataSource, UIPickerViewDelegate>
+
+@property (nonatomic, copy) NSString *plistName;
 
 @property (nonatomic, strong) NSArray *plistArray;
 @property (nonatomic, assign) BOOL isLevelArray;
@@ -18,10 +22,11 @@
 @property (nonatomic, assign) BOOL isLevelDic;
 @property (nonatomic, strong) NSDictionary *levelTwoDic;
 
-
+@property (nonatomic, strong) UIToolbar *toolbar;
 @property (nonatomic, strong) UIPickerView *pickerView;
 @property (nonatomic, strong) UIDatePicker *datePicker;
 @property (nonatomic, strong) NSDate *defaultDate;
+@property (nonatomic, assign) BOOL isHaveNavController;
 @property (nonatomic, assign) CGFloat pickerViewHeight;
 
 @property (nonatomic, copy) NSString *resultString;
@@ -54,6 +59,29 @@
 }
 
 
+- (instancetype)initWithFrame:(CGRect)frame {
+    
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupToolbar];
+    }
+    return self;
+}
+
+
+- (instancetype)initPickerViewWithPlistName:(NSString *)plistName isHaveNavController:(BOOL)isHaveNavControler {
+  
+    self = [super init];
+    if (self) {
+        _plistName = plistName;
+        self.plistArray = [self getPlistArrayByPlistName:plistName];
+        [self setUpPickView];
+        [self setFrameWith:isHaveNavControler];
+    }
+    return self;
+}
+
+
 
 
 - (instancetype)initPickerViewWithArray:(NSArray *)array isHaveNavController:(BOOL)isHaveNavController {
@@ -75,9 +103,17 @@
     if (self) {
         _defaultDate = defaulDate;
         [self setUpDatePickerWithdatePickerMode:datePickerMode];
-        [self setFrameWith:YES];
+        [self setFrameWith:isHaveNavControler];
     }
     return self;
+}
+
+- (NSArray *)getPlistArrayByPlistName:(NSString *)plistName {
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:plistName ofType:@"plist"];
+    NSArray *array = [[NSArray alloc] initWithContentsOfFile:path];
+    [self setArrayClass:array];
+    return array;
 }
 
 
@@ -115,7 +151,7 @@
     
     pickerView.delegate = self;
     pickerView.dataSource = self;
-    pickerView.frame = CGRectMake(0, YHToolbarHeight, pickerView.frame.size.width, pickerView.frame.size.height);
+    pickerView.frame = CGRectMake(0, YHToolbarHeight, Screen_Width, pickerView.frame.size.height);
     _pickerViewHeight = pickerView.frame.size.height;
     [self addSubview:pickerView];
 }
@@ -127,10 +163,10 @@
     datePicker.datePickerMode = datePickerMode;
     datePicker.backgroundColor = [UIColor lightGrayColor];
     if (_defaultDate) {
-        datePicker.date = _defaultDate;
+        [datePicker setDate:_defaultDate];
     }
     _datePicker = datePicker;
-    datePicker.frame = CGRectMake(0, YHToolbarHeight, datePicker.frame.size.width, datePicker.frame.size.height);
+    datePicker.frame = CGRectMake(0, YHToolbarHeight,Screen_Width, datePicker.frame.size.height);
     _pickerViewHeight = datePicker.frame.size.height;
     [self addSubview:datePicker];
 }
@@ -138,7 +174,7 @@
 - (void)setFrameWith:(BOOL)isHaveNavControler {
     CGFloat toolViewX = 0;
     CGFloat toolViewY;
-    CGFloat toolViewW = [UIScreen mainScreen].bounds.size.width;
+    CGFloat toolViewW = Screen_Width;
     CGFloat toolViewH = _pickerViewHeight + YHToolbarHeight;
     if (isHaveNavControler) {
         toolViewY = [UIScreen mainScreen].bounds.size.height - toolViewH - 49;
@@ -148,6 +184,35 @@
     self.frame = CGRectMake(toolViewX, toolViewY, toolViewW, toolViewH);
 }
 
+
+#pragma mark - 设置工具栏
+- (void)setupToolbar {
+    
+    _toolbar = [self setToolbarStyle];
+    [self setToolbarWithPickerViewFrame];
+    
+    [self addSubview:_toolbar];
+}
+
+- (UIToolbar *)setToolbarStyle {
+    
+    UIToolbar *toolbar = [[UIToolbar alloc] init];
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(remove)];
+    
+    UIBarButtonItem *flexiItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+    
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(doneClick)];
+    
+    toolbar.items = @[leftItem, flexiItem, rightItem];
+    
+    return toolbar;
+}
+
+- (void)setToolbarWithPickerViewFrame {
+    
+    _toolbar.frame = CGRectMake(0, 0, Screen_Width, YHToolbarHeight);
+}
 
 #pragma mark - UIPickerViewDataSource
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
@@ -255,6 +320,7 @@
 }
 
 
+
 #pragma mark - 添加 删除
 - (void)show {
     [[UIApplication sharedApplication].keyWindow addSubview:self];
@@ -263,6 +329,52 @@
 - (void)remove {
     [self removeFromSuperview];
 }
+
+
+#pragma mark - Toolbar 确定按钮点击,并使用代理回传
+- (void)doneClick {
+    
+    if (_pickerView) {
+        
+        if (_resultString) {
+            
+        } else {
+            if (_isLevelString) {
+                _resultString = [NSString stringWithFormat:@"%@", _plistArray[0]];
+            } else if (_isLevelArray) {
+                _resultString = @"";
+                for (NSInteger i = 0; i < _plistArray.count; i++) {
+                    _resultString = [NSString stringWithFormat:@"%@,%@", _resultString, _plistArray[i][0]];
+                }
+            } else if (_isLevelDic) {
+                
+                if (_state == nil) {
+                    _state = _dicKeyArray[0][0];
+                    NSDictionary *dicValueDic = _plistArray[0];
+                    _city = [dicValueDic allValues][0][0];
+                }
+                if (_city == nil) {
+                    NSInteger cIndex = [_pickerView selectedRowInComponent:0];
+                    NSDictionary *dicValueDic = _plistArray[cIndex];
+                    _city = [dicValueDic allValues][0][0];
+                }
+                _resultString = [NSString stringWithFormat:@"%@%@", _state, _city];
+            }
+        }
+    } else if (_datePicker) {
+        _resultString = [NSString stringWithFormat:@"%@", _datePicker.date];
+    }
+    
+    // 调用代理方法
+    if ([self.delegate respondsToSelector:@selector(toolbarDonButtonClick:resultString:)]) {
+        [self.delegate toolbarDonButtonClick:self resultString:_resultString];
+    }
+    
+    [self remove];
+}
+
+
+
 
 
 

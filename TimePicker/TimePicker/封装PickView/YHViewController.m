@@ -9,6 +9,8 @@
 #import "YHViewController.h"
 #import "YHPickerView.h"
 
+
+
 @interface YHViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
@@ -26,8 +28,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _arrayM = @[@"City",@"一组数组",@"多组数组",@"时间",@"通过数组创建"];
-
+    _arrayM = @[@"city",@"一组数据",@"多组数据",@"时间",@"通过数组创建"];
+    
     [self setupUI];
 }
 
@@ -63,25 +65,26 @@
     _indexPath = indexPath;
     [_pickerView remove];
     
-//    UITableViewCell * cell=[self.tableView cellForRowAtIndexPath:indexPath];
+    UITableViewCell * cell=[self.tableView cellForRowAtIndexPath:indexPath];
   
     switch (indexPath.row) {
         case 0:
-            
-            break;
         case 1:
-            
-            break;
         case 2:
-            
+            _pickerView = [[YHPickerView alloc] initPickerViewWithPlistName:cell.textLabel.text isHaveNavController:YES];
+//            _pickerView = [[YHPickerView alloc] initPickviewWithPlistName:cell.textLabel.text isHaveNavControler:YES];
             break;
+            
         case 3:
             _pickerView = [[YHPickerView alloc] initDatePickerWithDate:[NSDate date] datePickerMode:UIDatePickerModeDate isHaveNavControler:YES];
+//            _pickerView = [[ZHPickView alloc] initDatePickWithDate:[NSDate date] datePickerMode:UIDatePickerModeDate isHaveNavControler:YES];
             break;
+        
         case 4:
         { NSArray *array=@[@[@"1",@"小明",@"aa"],@[@"2",@"大黄",@"bb"],@[@"3",@"企鹅",@"cc"]];
 
             _pickerView = [[YHPickerView alloc] initPickerViewWithArray:array isHaveNavController:YES];
+//            _pickerView = [[ZHPickView alloc] initDatePickWithDate:[NSDate date] datePickerMode:UIDatePickerModeDate isHaveNavControler:YES];
         }
             break;
             
@@ -109,6 +112,7 @@
     tableView.dataSource = self;
     tableView.delegate = self;
     
+    _tableView = tableView;
 }
 
 

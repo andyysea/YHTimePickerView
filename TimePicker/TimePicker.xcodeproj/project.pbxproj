@@ -11,6 +11,9 @@
 		EA411BBC1DD9FBFA002B28BA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA411BBB1DD9FBFA002B28BA /* AppDelegate.m */; };
 		EA411BC41DD9FBFA002B28BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA411BC31DD9FBFA002B28BA /* Assets.xcassets */; };
 		EA411BC71DD9FBFA002B28BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA411BC51DD9FBFA002B28BA /* LaunchScreen.storyboard */; };
+		EA5E3E3B1DEEB428007440D2 /* 多组数据.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA5E3E381DEEB428007440D2 /* 多组数据.plist */; };
+		EA5E3E3C1DEEB428007440D2 /* 一组数据.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA5E3E391DEEB428007440D2 /* 一组数据.plist */; };
+		EA5E3E3D1DEEB428007440D2 /* city.plist in Resources */ = {isa = PBXBuildFile; fileRef = EA5E3E3A1DEEB428007440D2 /* city.plist */; };
 		EAD36BAA1DEB2CBC0021D2E1 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD36BA71DEB2CBC0021D2E1 /* ViewController.m */; };
 		EAD36BAB1DEB2CBC0021D2E1 /* YHToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD36BA91DEB2CBC0021D2E1 /* YHToolbar.m */; };
 		EAD36BAE1DEB2CCC0021D2E1 /* YHViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAD36BAD1DEB2CCC0021D2E1 /* YHViewController.m */; };
@@ -26,6 +29,9 @@
 		EA411BC31DD9FBFA002B28BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA411BC61DD9FBFA002B28BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA411BC81DD9FBFA002B28BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EA5E3E381DEEB428007440D2 /* 多组数据.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "多组数据.plist"; sourceTree = "<group>"; };
+		EA5E3E391DEEB428007440D2 /* 一组数据.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "一组数据.plist"; sourceTree = "<group>"; };
+		EA5E3E3A1DEEB428007440D2 /* city.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = city.plist; sourceTree = "<group>"; };
 		EAD36BA61DEB2CBC0021D2E1 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		EAD36BA71DEB2CBC0021D2E1 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		EAD36BA81DEB2CBC0021D2E1 /* YHToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHToolbar.h; sourceTree = "<group>"; };
@@ -90,9 +96,20 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		EA5E3E3E1DEEB431007440D2 /* Plist */ = {
+			isa = PBXGroup;
+			children = (
+				EA5E3E381DEEB428007440D2 /* 多组数据.plist */,
+				EA5E3E391DEEB428007440D2 /* 一组数据.plist */,
+				EA5E3E3A1DEEB428007440D2 /* city.plist */,
+			);
+			name = Plist;
+			sourceTree = "<group>";
+		};
 		EAD36BA41DEB2CBC0021D2E1 /* 封装PickView */ = {
 			isa = PBXGroup;
 			children = (
+				EA5E3E3E1DEEB431007440D2 /* Plist */,
 				EAD36BAF1DEB2CF10021D2E1 /* YHPickView */,
 				EAD36BAC1DEB2CCC0021D2E1 /* YHViewController.h */,
 				EAD36BAD1DEB2CCC0021D2E1 /* YHViewController.m */,
@@ -179,6 +196,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA411BC71DD9FBFA002B28BA /* LaunchScreen.storyboard in Resources */,
+				EA5E3E3B1DEEB428007440D2 /* 多组数据.plist in Resources */,
+				EA5E3E3D1DEEB428007440D2 /* city.plist in Resources */,
+				EA5E3E3C1DEEB428007440D2 /* 一组数据.plist in Resources */,
 				EA411BC41DD9FBFA002B28BA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

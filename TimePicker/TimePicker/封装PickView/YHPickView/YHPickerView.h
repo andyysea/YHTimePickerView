@@ -7,9 +7,32 @@
 //
 
 #import <UIKit/UIKit.h>
+@class YHPickerView;
+
+@protocol YHPickerViewDelegate <NSObject>
+
+- (void)toolbarDonButtonClick:(YHPickerView *)pickerView resultString:(NSString *)resultString;
+
+@end
+
+
 
 @interface YHPickerView : UIView
 
+/** 代理属性 */
+@property (nonatomic, weak) id <YHPickerViewDelegate> delegate;
+
+
+
+/**
+ 通过plistName添加一个pickerView
+
+ @param plistName          plist文件的名字
+ @param isHaveNavControler 是否在NavController之内
+
+ @return 带有toolbar的pickerView
+ */
+- (instancetype)initPickerViewWithPlistName:(NSString *)plistName isHaveNavController:(BOOL)isHaveNavControler;
 
 
 /**
