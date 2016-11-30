@@ -248,7 +248,7 @@
             }
         }
     }
-        
+     
     return rowArray.count;
 }
 
@@ -379,12 +379,13 @@
     _toolbar.tintColor = tintColor;
 }
 
-- (void)setPickerViewColor:(UIColor *)pickerViewColor {
-    _pickerView.backgroundColor = pickerViewColor;
-}
-
 - (void)setBarTintColor:(UIColor *)barTintColor {
     _toolbar.barTintColor = barTintColor;
+}
+
+- (void)setPickerViewBgColor:(UIColor *)pickerViewBgColor {
+    
+    _pickerView.backgroundColor = pickerViewBgColor;
 }
 
 - (void)dealloc {

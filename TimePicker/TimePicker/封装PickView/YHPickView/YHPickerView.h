@@ -23,7 +23,7 @@
 @property (nonatomic, weak) id <YHPickerViewDelegate> delegate;
 
 /** pickerView的颜色 */
-@property (nonatomic, strong) UIColor *pickerViewColor;
+@property (nonatomic, strong) UIColor *pickerViewBgColor;
 
 /** toolbar字体颜色 */
 @property (nonatomic, strong) UIColor *tintColor;
