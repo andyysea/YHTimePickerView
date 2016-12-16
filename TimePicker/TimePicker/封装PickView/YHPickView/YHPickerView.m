@@ -143,11 +143,14 @@
 }
 
 
+
+
 - (void)setUpPickView {
     
     UIPickerView *pickerView = [[UIPickerView alloc] init];
     pickerView.backgroundColor = [UIColor lightGrayColor];
     _pickerView = pickerView;
+    pickerView.showsSelectionIndicator = YES;
     
     pickerView.delegate = self;
     pickerView.dataSource = self;
@@ -182,6 +185,24 @@
         toolViewY = [UIScreen mainScreen].bounds.size.height - toolViewH;
     }
     self.frame = CGRectMake(toolViewX, toolViewY, toolViewW, toolViewH);
+   
+    if (!_defaultDate) {
+        
+        UIView *topLine = [[UIView alloc] init];
+        UIView *bottomLine = [[UIView alloc] init];
+        topLine.backgroundColor = [UIColor lightGrayColor];
+        bottomLine.backgroundColor = [UIColor lightGrayColor];
+        
+        topLine.frame = CGRectMake(0, (self.bounds.size.height) / 2 + 2, self.bounds.size.width, 1);
+        bottomLine.frame = CGRectMake(0, (self.bounds.size.height) / 2 + 38, self.bounds.size.width, 1);
+        
+        [self addSubview:topLine];
+        [self addSubview:bottomLine];
+    }
+    
+    
+    
+    
 }
 
 

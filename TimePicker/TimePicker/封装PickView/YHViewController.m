@@ -11,7 +11,7 @@
 
 
 
-@interface YHViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface YHViewController () <UITableViewDataSource, UITableViewDelegate, YHPickerViewDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 
@@ -72,19 +72,19 @@
         case 1:
         case 2:
             _pickerView = [[YHPickerView alloc] initPickerViewWithPlistName:cell.textLabel.text isHaveNavController:YES];
-//            _pickerView = [[YHPickerView alloc] initPickviewWithPlistName:cell.textLabel.text isHaveNavControler:YES];
+
             break;
             
         case 3:
             _pickerView = [[YHPickerView alloc] initDatePickerWithDate:[NSDate date] datePickerMode:UIDatePickerModeDate isHaveNavControler:YES];
-//            _pickerView = [[ZHPickView alloc] initDatePickWithDate:[NSDate date] datePickerMode:UIDatePickerModeDate isHaveNavControler:YES];
+
             break;
         
         case 4:
         { NSArray *array=@[@[@"1",@"小明",@"aa"],@[@"2",@"大黄",@"bb"],@[@"3",@"企鹅",@"cc"]];
 
             _pickerView = [[YHPickerView alloc] initPickerViewWithArray:array isHaveNavController:YES];
-//            _pickerView = [[ZHPickView alloc] initDatePickWithDate:[NSDate date] datePickerMode:UIDatePickerModeDate isHaveNavControler:YES];
+
         }
             break;
             
@@ -94,12 +94,26 @@
     
     _pickerView.tintColor = [UIColor redColor];
     _pickerView.barTintColor = [UIColor orangeColor];
-    _pickerView.pickerViewColor = [UIColor blueColor];
+//    _pickerView.pickerViewBgColor = [UIColor blueColor];
+    _pickerView.pickerViewBgColor = [UIColor whiteColor];
     
     [_pickerView show];
     
+    
+    // 设置代理
+    _pickerView.delegate = self;
+    
 }
 
+
+#pragma mark - YHPickerViewDelegate
+
+- (void)toolbarDonButtonClick:(YHPickerView *)pickerView resultString:(NSString *)resultString {
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.indexPath];
+    
+    cell.textLabel.text = resultString;
+}
 
 
 
