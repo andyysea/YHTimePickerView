@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7EBF2D1C1E72A3920009F373 /* TimePickerDescribe in Resources */ = {isa = PBXBuildFile; fileRef = 7EBF2D1B1E72A3920009F373 /* TimePickerDescribe */; };
+		7EF447161E7E97FF00F81655 /* YHDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF447151E7E97FF00F81655 /* YHDateViewController.m */; };
+		7EF4471A1E7E996500F81655 /* YHDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF447191E7E996500F81655 /* YHDatePickerView.m */; };
+		7EF447571E82857600F81655 /* NSDate+category.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF447561E82857600F81655 /* NSDate+category.m */; };
 		EA411BB91DD9FBFA002B28BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EA411BB81DD9FBFA002B28BA /* main.m */; };
 		EA411BBC1DD9FBFA002B28BA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EA411BBB1DD9FBFA002B28BA /* AppDelegate.m */; };
 		EA411BC41DD9FBFA002B28BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA411BC31DD9FBFA002B28BA /* Assets.xcassets */; };
@@ -22,6 +26,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7EBF2D1B1E72A3920009F373 /* TimePickerDescribe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TimePickerDescribe; sourceTree = "<group>"; };
+		7EF447141E7E97FF00F81655 /* YHDateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHDateViewController.h; sourceTree = "<group>"; };
+		7EF447151E7E97FF00F81655 /* YHDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YHDateViewController.m; sourceTree = "<group>"; };
+		7EF447181E7E996500F81655 /* YHDatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHDatePickerView.h; sourceTree = "<group>"; };
+		7EF447191E7E996500F81655 /* YHDatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YHDatePickerView.m; sourceTree = "<group>"; };
+		7EF447551E82857600F81655 /* NSDate+category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+category.h"; sourceTree = "<group>"; };
+		7EF447561E82857600F81655 /* NSDate+category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+category.m"; sourceTree = "<group>"; };
 		EA411BB41DD9FBFA002B28BA /* TimePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA411BB81DD9FBFA002B28BA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EA411BBA1DD9FBFA002B28BA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -55,6 +66,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7EBF2CC31E7297480009F373 /* 最新封装PickView */ = {
+			isa = PBXGroup;
+			children = (
+				7EF447141E7E97FF00F81655 /* YHDateViewController.h */,
+				7EF447151E7E97FF00F81655 /* YHDateViewController.m */,
+				7EF447171E7E995200F81655 /* YHDatePickerView */,
+			);
+			path = "最新封装PickView";
+			sourceTree = "<group>";
+		};
+		7EF447171E7E995200F81655 /* YHDatePickerView */ = {
+			isa = PBXGroup;
+			children = (
+				7EF447181E7E996500F81655 /* YHDatePickerView.h */,
+				7EF447191E7E996500F81655 /* YHDatePickerView.m */,
+				7EF447551E82857600F81655 /* NSDate+category.h */,
+				7EF447561E82857600F81655 /* NSDate+category.m */,
+			);
+			path = YHDatePickerView;
+			sourceTree = "<group>";
+		};
 		EA411BAB1DD9FBFA002B28BA = {
 			isa = PBXGroup;
 			children = (
@@ -74,10 +106,12 @@
 		EA411BB61DD9FBFA002B28BA /* TimePicker */ = {
 			isa = PBXGroup;
 			children = (
+				7EBF2D1B1E72A3920009F373 /* TimePickerDescribe */,
 				EA411BBA1DD9FBFA002B28BA /* AppDelegate.h */,
 				EA411BBB1DD9FBFA002B28BA /* AppDelegate.m */,
 				EAD36BB61DEB2F140021D2E1 /* YHTabBarController.h */,
 				EAD36BB71DEB2F140021D2E1 /* YHTabBarController.m */,
+				7EBF2CC31E7297480009F373 /* 最新封装PickView */,
 				EAD36BA41DEB2CBC0021D2E1 /* 封装PickView */,
 				EAD36BA51DEB2CBC0021D2E1 /* 系统Pick */,
 				EA411BB71DD9FBFA002B28BA /* Supporting Files */,
@@ -195,6 +229,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EBF2D1C1E72A3920009F373 /* TimePickerDescribe in Resources */,
 				EA411BC71DD9FBFA002B28BA /* LaunchScreen.storyboard in Resources */,
 				EA5E3E3B1DEEB428007440D2 /* 多组数据.plist in Resources */,
 				EA5E3E3D1DEEB428007440D2 /* city.plist in Resources */,
@@ -211,12 +246,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAD36BAA1DEB2CBC0021D2E1 /* ViewController.m in Sources */,
+				7EF4471A1E7E996500F81655 /* YHDatePickerView.m in Sources */,
 				EAD36BB51DEB2DBE0021D2E1 /* YHPickerView.m in Sources */,
 				EAD36BAE1DEB2CCC0021D2E1 /* YHViewController.m in Sources */,
 				EA411BBC1DD9FBFA002B28BA /* AppDelegate.m in Sources */,
+				7EF447571E82857600F81655 /* NSDate+category.m in Sources */,
 				EAD36BB81DEB2F140021D2E1 /* YHTabBarController.m in Sources */,
 				EAD36BAB1DEB2CBC0021D2E1 /* YHToolbar.m in Sources */,
 				EA411BB91DD9FBFA002B28BA /* main.m in Sources */,
+				7EF447161E7E97FF00F81655 /* YHDateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

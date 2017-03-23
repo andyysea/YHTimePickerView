@@ -9,6 +9,7 @@
 #import "YHTabBarController.h"
 #import "YHViewController.h"
 #import "ViewController.h"
+#import "YHDateViewController.h"
 
 @interface YHTabBarController ()
 
@@ -27,7 +28,11 @@
     UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:vc2];
     vc2.title = @"系统";
     
-    self.viewControllers = @[nav1,nav2];
+    YHDateViewController *vc3 = [YHDateViewController new];
+    UINavigationController *nav3 = [[UINavigationController alloc] initWithRootViewController:vc3];
+    vc3.title = @"自定义DatePickerView";
+    
+    self.viewControllers = @[nav1,nav2,nav3];
 }
 
 - (void)didReceiveMemoryWarning {
