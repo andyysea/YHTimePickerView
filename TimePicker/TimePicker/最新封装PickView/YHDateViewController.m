@@ -31,7 +31,7 @@
 - (void)buttonClick:(UIButton *)button {
     
     if (self.datePickerView == nil) {
-        self.datePickerView = [[YHDatePickerView alloc] initWithPickerStyle:YHDatePickerStyleYearMonthDay];
+        self.datePickerView = [[YHDatePickerView alloc] initWithPickerStyle:YHDatePickerStyleYearMonthDayHourMinute];
     }
     //[self.view addSubview:self.datePickerView];
    // self.datePickerView.timeUnitLabelTextColor = [UIColor whiteColor];

@@ -64,6 +64,97 @@
     return 40;
 }
 
+// 有三种返回每个component各行的title, 这里用代理方法中的第三种
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
+    UILabel *reusingLabel = (UILabel *)view;
+    if (!reusingLabel) {
+        reusingLabel = [UILabel new];
+        reusingLabel.textColor = [UIColor blackColor];
+        reusingLabel.textAlignment = NSTextAlignmentCenter;
+        reusingLabel.font = [UIFont systemFontOfSize:20];
+    }
+    
+    NSString *textTitle = @"";
+    switch (self.myDatePickerViewStyle) {
+        case YHDatePickerStyleYearMonthDayHourMinute: //年 月 日 时 分
+            if (component == 0) {
+                textTitle = self.yearArray[row];
+            }
+            if (component == 1) {
+                textTitle = self.monthArray[row];
+            }
+            if (component == 2) {
+                textTitle = self.dayArray[row];
+            }
+            if (component == 3) {
+                textTitle = self.hourArray[row];
+            }
+            if (component == 4) {
+                textTitle = self.minuteArray[row];
+            }
+            break;
+        case YHDatePickerStyleYearMonthDayHour: //年 月 日 时
+            if (component == 0) {
+                textTitle = self.yearArray[row];
+            }
+            if (component == 1) {
+                textTitle = self.monthArray[row];
+            }
+            if (component == 2) {
+                textTitle = self.dayArray[row];
+            }
+            if (component == 3) {
+                textTitle = self.hourArray[row];
+            }
+            break;
+        case YHDatePickerStyleMonthDayHourMinute: //月 日 时 分
+            if (component == 0) {
+                textTitle = self.monthArray[row];
+            }
+            if (component == 1) {
+                textTitle = self.dayArray[row];
+            }
+            if (component == 2) {
+                textTitle = self.hourArray[row];
+            }
+            if (component == 3) {
+                textTitle = self.minuteArray[row];
+            }
+            break;
+        case YHDatePickerStyleYearMonthDay:     //年 月 日
+            if (component == 0) {
+                textTitle = self.yearArray[row];
+            }
+            if (component == 1) {
+                textTitle = self.monthArray[row];
+            }
+            if (component == 2) {
+                textTitle = self.dayArray[row];
+            }
+            break;
+        case YHDatePickerStyleMouthDay:         //月 日
+            if (component == 0) {
+                textTitle = self.monthArray[row];
+            }
+            if (component == 1) {
+                textTitle = self.dayArray[row];
+            }
+            break;
+        case YHDatePickerStyleHourMinute:        //时 分
+            if (component == 0) {
+                textTitle = self.hourArray[row];
+            }
+            if (component == 1) {
+                textTitle = self.minuteArray[row];
+            }
+            break;
+    }
+    
+    reusingLabel.text = textTitle;
+    return reusingLabel;
+}
+
+
 #pragma mark - UIPickerViewDataSource
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     switch (self.myDatePickerViewStyle) {
@@ -173,10 +264,10 @@
         }
     }
     // 中间向右便宜量 和 大小
-    CGFloat offsetCenter = 16;
+    CGFloat offsetCenterX = 18;
     CGFloat labelWH = 16;
     for (NSInteger index = 0; index < unitArray.count; index++) {
-        CGFloat offsetX = screen_width / (unitArray.count * 2) + offsetCenter + screen_width / unitArray.count * index;
+        CGFloat offsetX = screen_width / (unitArray.count * 2) + offsetCenterX + screen_width / unitArray.count * index;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(offsetX, self.yearLabel.bounds.size.height / 2 - labelWH, labelWH, labelWH)];
         label.text = unitArray[index];
         label.textAlignment = NSTextAlignmentCenter;
