@@ -12,8 +12,8 @@
 
 #define  screen_width    [UIScreen mainScreen].bounds.size.width
 #define  screen_height   [UIScreen mainScreen].bounds.size.height
-#define  MiniYear        1970  //默认最小年份
-#define  MaxYear         2049  //默认最大年份
+//#define  MiniYear        1970  //默认最小年份
+//#define  MaxYear         2049  //默认最大年份
 
 @interface YHDatePickerView ()<UIPickerViewDataSource, UIPickerViewDelegate>
 /** 日期存储数组 */
@@ -56,7 +56,6 @@
 /** pickerView的父视图 */
 @property (nonatomic, weak) UIView *bottomContentView;
 
-
 @end
 
 @implementation YHDatePickerView
@@ -66,14 +65,12 @@
 - (instancetype)initWithPickerStyle:(YHDatePickerStyle)myDatePickerStyle maxLimitDate:(NSDate *)maxDate minLimitDate:(NSDate *)minDate completionHandler:(void (^)(NSDate *))complete{
     self = [super init];
     if (self) {
-        
         self.myDatePickerViewStyle = myDatePickerStyle;
         self.maxLimitDate = maxDate;
         self.minLimitDate = minDate;
         if (complete) {
             self.complete = complete;
         }
-    
         [self defalutConfiguration];
         [self setupUI];
     }
@@ -512,7 +509,7 @@
         }
         [_minuteArray addObject:numStr];    // 分钟-->每小时都一样
     }
-    for (NSInteger i = MiniYear; i <= MaxYear; i++) {
+    for (NSInteger i = self.minLimitDate.year; i <= self.maxLimitDate.year; i++) {
         NSString *numStr = [NSString stringWithFormat:@"%02zd", i];
         [_yearArray addObject:numStr];      // 默认一共多少年
     }
@@ -527,16 +524,23 @@
     if (!date) {
         date = [NSDate date];
     }
+    // 注意滚动显示的位置不在 最大和最小 日期限制范围内
+    if ([date compare:self.minLimitDate] == NSOrderedAscending) {
+        date = self.minLimitDate;
+    }
+    if ([date compare:self.maxLimitDate] == NSOrderedDescending) {
+        date = self.maxLimitDate;
+    }
+    
     [self daysOfTheMonth:date.month InTheYear:date.year];
     
-    self.yearIndex = date.year - MiniYear;
+    self.yearIndex = date.year - self.minLimitDate.year;
     self.monthIndex = date.month - 1;
     self.dayIndex = date.day - 1;
     self.hourIndex = date.hour;
     self.minuteIndex = date.minute;
     
     self.yearLabel.text = @(date.year).description;
-//    self.yearLabel = self.yearArray[self.yearIndex];
     // 判断不同状态下的时间下标数组
     NSArray *indexArray = nil;
     switch (self.myDatePickerViewStyle) {

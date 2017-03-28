@@ -37,7 +37,7 @@ typedef NS_ENUM (NSInteger, YHDatePickerStyle){
  @param myDatePickerStyle 选择的显示样式
  @param maxDate 最大限制日期,可以传 'nil' ,默认最大为 2049-12-31 23:59
  @param minDate 最小限制日期,可以传 'nil' ,默认最小为 1970-01-01 00:00
- @param complete 完成回调-->点击确定按钮之后回调选中日期
+ @param complete 完成回调-->点击确定按钮之后回调选中日期,然后根据需要转换成需要的格式
  @return 返回初始化好的自定义datePickerView视图
  */
 - (instancetype)initWithPickerStyle:(YHDatePickerStyle)myDatePickerStyle maxLimitDate:(NSDate *)maxDate minLimitDate:(NSDate *)minDate completionHandler:(void(^)(NSDate *seletDate))complete;

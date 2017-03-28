@@ -29,9 +29,10 @@
 }
 
 - (void)buttonClick:(UIButton *)button {
-    
-
-    self.datePickerView = [[YHDatePickerView alloc] initWithPickerStyle:YHDatePickerStyleYearMonthDayHourMinute maxLimitDate:nil minLimitDate:nil completionHandler:^(NSDate *seletDate) {
+    NSDate *minLimitDate = [NSDate dateWithTimeIntervalSinceNow:0];
+    NSDate *maxLimitDate = [NSDate dateWithTimeIntervalSinceNow:86400 * 365 * 3];
+    NSLog(@"minLimitDate -> %@, maxLimitDate-> %@",minLimitDate,maxLimitDate);
+    self.datePickerView = [[YHDatePickerView alloc] initWithPickerStyle:YHDatePickerStyleYearMonthDayHourMinute maxLimitDate:maxLimitDate minLimitDate:minLimitDate completionHandler:^(NSDate *seletDate) {
         
         NSLog(@"--> %@",seletDate);
         NSDateFormatter *formatter = [NSDateFormatter new];
@@ -40,11 +41,11 @@
         NSLog(@"--> %@",seletTimeStr);
     }];
     [self.datePickerView show];
-    self.datePickerView.scrollDate = [NSDate dateWithTimeInterval:86400 * 369 sinceDate:[NSDate date]];
-    self.datePickerView.barTintColor = [UIColor redColor];
-    self.datePickerView.tintColor = [UIColor blueColor];
-    self.datePickerView.bottomViewBgColor = [UIColor darkGrayColor];
-    self.datePickerView.timeUnitLabelTextColor = [UIColor redColor];
+    self.datePickerView.scrollDate = [NSDate dateWithTimeInterval: - 86400 * 369 * 20 sinceDate:[NSDate date]];
+//    self.datePickerView.barTintColor = [UIColor redColor];
+//    self.datePickerView.tintColor = [UIColor blueColor];
+//    self.datePickerView.bottomViewBgColor = [UIColor darkGrayColor];
+//    self.datePickerView.timeUnitLabelTextColor = [UIColor redColor];
 }
 
 
