@@ -15,7 +15,7 @@
 //#define  MiniYear        1970  //默认最小年份
 //#define  MaxYear         2049  //默认最大年份
 
-@interface YHDatePickerView ()<UIPickerViewDataSource, UIPickerViewDelegate>
+@interface YHDatePickerView ()<UIPickerViewDataSource, UIPickerViewDelegate, UIGestureRecognizerDelegate>
 /** 日期存储数组 */
 @property (nonatomic, strong) NSMutableArray *yearArray;
 @property (nonatomic, strong) NSMutableArray *monthArray;
@@ -111,6 +111,23 @@
             UILabel *subLabel = (UILabel *)subView;
             subLabel.textColor = timeUnitLabelTextColor;
         }
+    }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+/** 接触的点是否在 指定视图上, 也可以通过判断接触的视图是否是最底层视图的子视图来判断 */
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // 1>
+//    if (CGRectContainsPoint(self.bgView.bounds, [touch locationInView:self.bgView])) {
+//        return NO;
+//    } else {
+//        return YES;
+//    }
+    // 2>
+    if ([touch.view isDescendantOfView:self.bgView]) {
+        return NO;
+    } else {
+        return YES;
     }
 }
 
@@ -628,6 +645,7 @@
     
     // 4> 添加点击手势
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dimiss)];
+    tapGesture.delegate = self;
     [self addGestureRecognizer:tapGesture];
     
     // 5> 属性记录
