@@ -31,21 +31,31 @@
 
 /** pickerView视图 */
 @property (nonatomic, weak) UIPickerView *pickerView;
-/** 日期格式 */
-@property (nonatomic, copy) NSString *dateFormatter;
 
+/** 枚举类型属性 */
+@property (nonatomic, assign) YHDatePickerStyle myDatePickerViewStyle;
 /** 最大时间限制 --> 默认 2049 */
 @property (nonatomic, copy) NSDate *maxLimitDate;
 /** 最小时间限制 --> 默认 1970 */
 @property (nonatomic, copy) NSDate *minLimitDate;
+/** 完成回调 block */
+@property (nonatomic, copy) void(^complete)(NSDate *selectDate);
+/** 显示的选中日期 */
+@property (nonatomic, copy) NSDate *selectedDate;
 
-
-/** 枚举类型属性 */
-@property (nonatomic, assign) YHDatePickerStyle myDatePickerViewStyle;
 /** 最底层内容背景视图 */
 @property (nonatomic, weak) UIView *bgView;
 /** 底部显示的年份标签 */
 @property (nonatomic, weak) UILabel *yearLabel;
+/** topBar背景视图 */
+@property (nonatomic, weak) UIView *topBarBgView;
+/** 取消按钮 */
+@property (nonatomic, weak) UIButton *cancelButton;
+/** 确定按钮 */
+@property (nonatomic, weak) UIButton *sureButton;
+/** pickerView的父视图 */
+@property (nonatomic, weak) UIView *bottomContentView;
+
 
 @end
 
@@ -53,20 +63,58 @@
 
 #pragma mark - 初始化方法
 /** 初始化方法,要设置样式*/
-- (instancetype)initWithPickerStyle:(YHDatePickerStyle)myDatePickerStyle {
+- (instancetype)initWithPickerStyle:(YHDatePickerStyle)myDatePickerStyle maxLimitDate:(NSDate *)maxDate minLimitDate:(NSDate *)minDate completionHandler:(void (^)(NSDate *))complete{
     self = [super init];
     if (self) {
+        
         self.myDatePickerViewStyle = myDatePickerStyle;
+        self.maxLimitDate = maxDate;
+        self.minLimitDate = minDate;
+        if (complete) {
+            self.complete = complete;
+        }
+    
         [self defalutConfiguration];
         [self setupUI];
     }
     return self;
 }
 
-#pragma mark - 外部传入显示的滚动位置
+#pragma mark - 重写书属性的setter方法
+/** 滚动到指定日期 */
 - (void)setScrollDate:(NSDate *)scrollDate {
     _scrollDate = scrollDate;
     [self scrollToDate:scrollDate animated:YES];
+}
+
+/** 设置工具栏的颜色 */
+- (void)setBarTintColor:(UIColor *)barTintColor {
+    _barTintColor = barTintColor;
+    self.topBarBgView.backgroundColor = barTintColor;
+}
+
+/** 设置工具栏上 取消/确定 按钮的字体颜色 */
+- (void)setTintColor:(UIColor *)tintColor {
+    _tintColor = tintColor;
+    [self.cancelButton setTitleColor:tintColor forState:UIControlStateNormal];
+    [self.sureButton setTitleColor:tintColor forState:UIControlStateNormal];
+}
+
+/** 设置pickerView背景视图 */
+- (void)setBottomViewBgColor:(UIColor *)bottomViewBgColor {
+    _bottomViewBgColor = bottomViewBgColor;
+    self.bottomContentView.backgroundColor = bottomViewBgColor;
+}
+
+/** 设置时间单位颜色 */
+- (void)setTimeUnitLabelTextColor:(UIColor *)timeUnitLabelTextColor {
+    _timeUnitLabelTextColor = timeUnitLabelTextColor;
+    for (UIView *subView in self.yearLabel.subviews) {
+        if ([subView isKindOfClass:[UILabel class]]) {
+            UILabel *subLabel = (UILabel *)subView;
+            subLabel.textColor = timeUnitLabelTextColor;
+        }
+    }
 }
 
 #pragma mark - UIPickerViewDelegate
@@ -231,7 +279,7 @@
             if (component == 0) {
                 self.hourIndex = row;
             } else if (component == 1) {
-                self.hourIndex = row;
+                self.minuteIndex = row;
             }
         }
             break;
@@ -248,6 +296,7 @@
             
         case YHDatePickerStyleMonthDayHourMinute:
         case YHDatePickerStyleMouthDay:
+//        case YHDatePickerStyleHourMinute:
             if (component == 0 || component == 1) {
                 [self daysOfTheMonth:[self.monthArray[self.monthIndex] integerValue] InTheYear:[self.yearArray[self.yearIndex] integerValue]];
                 if (self.dayArray.count - 1 < _dayIndex) {
@@ -262,8 +311,11 @@
 
     [self.pickerView reloadAllComponents];
     
-    NSString *dateStr = [NSString stringWithFormat:@"%@-%@-%@ %@:%@",_yearArray[_yearIndex],_monthArray[_monthIndex],_dayArray[_dayIndex],_hourArray[_hourIndex],_minuteArray[_minuteIndex]];
-    NSLog(@"dateStr -> %@", dateStr);
+
+    // 设置选中的日期,用于确定的时候回调
+    NSString *selectedDateStr = [NSString stringWithFormat:@"%@-%@-%@ %@:%@",self.yearArray[self.yearIndex],self.monthArray[self.monthIndex],self.dayArray[self.dayIndex],self.hourArray[self.hourIndex],self.minuteArray[self.minuteIndex]];
+//    NSLog(@"dateStr -> %@", selectedDateStr);
+    self.selectedDate = [NSDate date:selectedDateStr withFormat:@"yyyy-MM-dd HH:mm"];
 }
 
 
@@ -392,7 +444,14 @@
 
 #pragma mark - 确定按钮的点击方法
 - (void)sureButtonClick {
+    if (self.complete) {
+        if (!self.selectedDate) {
+            self.selectedDate = [NSDate date];
+        }
+        self.complete(self.selectedDate);
+    }
     
+    [self dimiss];
 }
 
 #pragma mark - 取消按钮/点按手势的点击方法
@@ -437,9 +496,6 @@
         _minLimitDate = [NSDate dateWithTimeIntervalSince1970:0];
     }
     
-//    if (!self.scrollDate) {
-//        _scrollDate = [NSDate date];
-//    }
     // 初始化数组 -->作为数据源
     _yearArray = [NSMutableArray array];
     _monthArray = [NSMutableArray array];
@@ -510,7 +566,7 @@
     for (NSInteger index = 0; index < indexArray.count; index++) {
         NSInteger component = index;
         NSInteger row = [indexArray[index] integerValue];
-        NSLog(@"row - %zd --- component - %zd", row, component);
+//        NSLog(@"row - %zd --- component - %zd", row, component);
         [self.pickerView selectRow:row inComponent:component animated:NO];
     }
 }
@@ -573,7 +629,11 @@
     // 5> 属性记录
     _bgView = bgView;
     _yearLabel = yearLabel;
+    _topBarBgView = topBarBgView;
+    _cancelButton = cancelButton;
+    _sureButton = sureButton;
     _pickerView = pickerView;
+    _bottomContentView = bottomContentView;
     
     // 6> 默认滚动到当前日期
     [self scrollToDate:nil animated:YES];

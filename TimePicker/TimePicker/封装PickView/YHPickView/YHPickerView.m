@@ -238,7 +238,7 @@
 #pragma mark - UIPickerViewDataSource
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     
-    NSInteger component;
+    NSInteger component = 0;
     if (_isLevelArray) {
         component = _plistArray.count;
     } else if (_isLevelString) {
