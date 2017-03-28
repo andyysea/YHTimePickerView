@@ -29,11 +29,15 @@
 @property (nonatomic, assign) NSInteger hourIndex;
 @property (nonatomic, assign) NSInteger minuteIndex;
 
+/** pickerView视图 */
+@property (nonatomic, weak) UIPickerView *pickerView;
 /** 日期格式 */
 @property (nonatomic, copy) NSString *dateFormatter;
 
-/** 滚动到指定日期 */
-@property (nonatomic, copy) NSDate *endDate;
+/** 最大时间限制 --> 默认 2049 */
+@property (nonatomic, copy) NSDate *maxLimitDate;
+/** 最小时间限制 --> 默认 1970 */
+@property (nonatomic, copy) NSDate *minLimitDate;
 
 
 /** 枚举类型属性 */
@@ -59,12 +63,18 @@
     return self;
 }
 
+#pragma mark - 外部传入显示的滚动位置
+- (void)setScrollDate:(NSDate *)scrollDate {
+    _scrollDate = scrollDate;
+    [self scrollToDate:scrollDate animated:YES];
+}
+
 #pragma mark - UIPickerViewDelegate
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component {
     return 40;
 }
 
-// 有三种返回每个component各行的title, 这里用代理方法中的第三种
+/** 有三种返回每个component各行的title, 这里用代理方法中的第三种 */
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
     UILabel *reusingLabel = (UILabel *)view;
     if (!reusingLabel) {
@@ -149,9 +159,111 @@
             }
             break;
     }
-    
     reusingLabel.text = textTitle;
     return reusingLabel;
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    switch (self.myDatePickerViewStyle) {
+        case YHDatePickerStyleYearMonthDayHourMinute:
+        {
+            if (component == 0) {
+                self.yearIndex = row;
+            } else if (component == 1) {
+                self.monthIndex = row;
+            } else if (component == 2) {
+                self.dayIndex = row;
+            } else if (component == 3) {
+                self.hourIndex = row;
+            } else if (component == 4) {
+                self.minuteIndex = row;
+            }
+        }
+            break;
+        case YHDatePickerStyleYearMonthDayHour:
+        {
+            if (component == 0) {
+                self.yearIndex = row;
+            } else if (component == 1) {
+                self.monthIndex = row;
+            } else if (component == 2) {
+                self.dayIndex = row;
+            } else if (component == 3) {
+                self.hourIndex = row;
+            }
+        }
+            break;
+        case YHDatePickerStyleMonthDayHourMinute:
+        {
+            if (component == 0) {
+                self.monthIndex = row;
+            } else if (component == 1) {
+                self.dayIndex = row;
+            } else if (component == 2) {
+                self.hourIndex = row;
+            } else if (component == 3) {
+                self.minuteIndex = row;
+            }
+        }
+            break;
+        case YHDatePickerStyleYearMonthDay:
+        {
+            if (component == 0) {
+                self.yearIndex = row;
+            } else if (component == 1) {
+                self.monthIndex = row;
+            } else if (component == 2) {
+                self.dayIndex = row;
+            }
+        }
+            break;
+        case YHDatePickerStyleMouthDay:
+        {
+            if (component == 0) {
+                self.monthIndex = row;
+            } else if (component == 1) {
+                self.dayIndex = row;
+            }
+        }
+            break;
+        case YHDatePickerStyleHourMinute:
+        {
+            if (component == 0) {
+                self.hourIndex = row;
+            } else if (component == 1) {
+                self.hourIndex = row;
+            }
+        }
+            break;
+        default:
+            break;
+    }
+    
+    switch (self.myDatePickerViewStyle) {
+        case YHDatePickerStyleYearMonthDayHourMinute:
+        case YHDatePickerStyleYearMonthDayHour:
+        case YHDatePickerStyleYearMonthDay:
+            
+            self.yearLabel.text = self.yearArray[self.yearIndex];
+            
+        case YHDatePickerStyleMonthDayHourMinute:
+        case YHDatePickerStyleMouthDay:
+            if (component == 0 || component == 1) {
+                [self daysOfTheMonth:[self.monthArray[self.monthIndex] integerValue] InTheYear:[self.yearArray[self.yearIndex] integerValue]];
+                if (self.dayArray.count - 1 < _dayIndex) {
+                    _dayIndex = self.dayArray.count - 1;
+                }
+            }
+            break;
+            
+        default:
+            break;
+    }
+
+    [self.pickerView reloadAllComponents];
+    
+    NSString *dateStr = [NSString stringWithFormat:@"%@-%@-%@ %@:%@",_yearArray[_yearIndex],_monthArray[_monthIndex],_dayArray[_dayIndex],_hourArray[_hourIndex],_minuteArray[_minuteIndex]];
+    NSLog(@"dateStr -> %@", dateStr);
 }
 
 
@@ -196,6 +308,8 @@
     NSInteger monthCount = self.monthArray.count;
     NSInteger hourCount = self.hourArray.count;
     NSInteger miniteCount = self.minuteArray.count;
+    // 当每次滚动的时候刷新数据源 -> 都会走这个方法,然后走这句代码,
+    //                       -> 保存天数的数组刷新了,改年该月对应的天数也刷新了
     NSInteger dayCount = [self daysOfTheMonth:[self.monthArray[self.monthIndex] integerValue] InTheYear:[self.yearArray[self.yearIndex] integerValue]];
     
     switch (self.myDatePickerViewStyle) {
@@ -219,27 +333,26 @@
 
 
 #pragma mark - 根据年月求得该年该月有多少天
+/** 方法返回的是该年该月对应的天数,同时也设置对应的该月的天数数组 */
 - (NSInteger)daysOfTheMonth:(NSInteger)month InTheYear:(NSInteger)year {
     // 四年一闰,百年不闰,四百年再闰
     BOOL IsBissextile = NO;
     if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
         IsBissextile = YES;
     }
+    [self.dayArray removeAllObjects];
     switch (month) {
         case 1: case 3: case 5: case 7: case 8: case 10: case 12:
-            [self.dayArray removeAllObjects];
             for (NSInteger i = 1; i <= 31 ; i++) {
                 [self.dayArray addObject:[NSString stringWithFormat:@"%02zd", i]];
             }
             return 31;
         case 4: case 6: case 9: case 11:
-            [self.dayArray removeAllObjects];
             for (NSInteger i = 1; i <= 30; i++) {
                 [self.dayArray addObject:[NSString stringWithFormat:@"%02zd", i]];
             }
             return 30;
         case 2:
-            [self.dayArray removeAllObjects];
             if (IsBissextile) {
                 for (NSInteger i = 1; i <= 29; i++) {
                     [self.dayArray addObject:[NSString stringWithFormat:@"%02zd", i]];
@@ -324,10 +437,10 @@
         _minLimitDate = [NSDate dateWithTimeIntervalSince1970:0];
     }
     
-    if (!self.endDate) {
-        _endDate = [NSDate date];
-    }
-    // 初始化数组
+//    if (!self.scrollDate) {
+//        _scrollDate = [NSDate date];
+//    }
+    // 初始化数组 -->作为数据源
     _yearArray = [NSMutableArray array];
     _monthArray = [NSMutableArray array];
     _dayArray = [NSMutableArray array];
@@ -346,6 +459,59 @@
     for (NSInteger i = MiniYear; i <= MaxYear; i++) {
         NSString *numStr = [NSString stringWithFormat:@"%02zd", i];
         [_yearArray addObject:numStr];      // 默认一共多少年
+    }
+
+}
+
+
+
+
+#pragma mark - 滚动到对应时间的位置,默认为滚动到当前时间
+- (void)scrollToDate:(NSDate *)date animated:(BOOL)animated {
+    if (!date) {
+        date = [NSDate date];
+    }
+    [self daysOfTheMonth:date.month InTheYear:date.year];
+    
+    self.yearIndex = date.year - MiniYear;
+    self.monthIndex = date.month - 1;
+    self.dayIndex = date.day - 1;
+    self.hourIndex = date.hour;
+    self.minuteIndex = date.minute;
+    
+    self.yearLabel.text = @(date.year).description;
+//    self.yearLabel = self.yearArray[self.yearIndex];
+    // 判断不同状态下的时间下标数组
+    NSArray *indexArray = nil;
+    switch (self.myDatePickerViewStyle) {
+        case YHDatePickerStyleYearMonthDayHourMinute:
+            indexArray = @[@(self.yearIndex),@(self.monthIndex),@(self.dayIndex),@(self.hourIndex),@(self.minuteIndex)];
+            break;
+        case YHDatePickerStyleYearMonthDayHour:
+            indexArray = @[@(self.yearIndex),@(self.monthIndex),@(self.dayIndex),@(self.hourIndex)];
+            break;
+        case YHDatePickerStyleMonthDayHourMinute:
+            indexArray = @[@(self.monthIndex),@(self.dayIndex),@(self.hourIndex),@(self.minuteIndex)];
+            break;
+        case YHDatePickerStyleYearMonthDay:
+            indexArray = @[@(self.yearIndex),@(self.monthIndex),@(self.dayIndex)];
+            break;
+        case YHDatePickerStyleMouthDay:
+            indexArray = @[@(self.monthIndex),@(self.dayIndex)];
+            break;
+        case YHDatePickerStyleHourMinute:
+            indexArray = @[@(self.hourIndex),@(self.minuteIndex)];
+            break;
+        default:
+            break;
+    }
+
+    [self.pickerView reloadAllComponents];
+    for (NSInteger index = 0; index < indexArray.count; index++) {
+        NSInteger component = index;
+        NSInteger row = [indexArray[index] integerValue];
+        NSLog(@"row - %zd --- component - %zd", row, component);
+        [self.pickerView selectRow:row inComponent:component animated:NO];
     }
 }
 
@@ -387,26 +553,30 @@
     UILabel *yearLabel = [[UILabel alloc] initWithFrame:bottomContentView.bounds];
     yearLabel.textColor = [UIColor colorWithRed:238 / 255.0 green:238 / 255.0 blue:238 / 255.0 alpha:1.0];
     yearLabel.textAlignment = NSTextAlignmentCenter;
-    yearLabel.text = @"2017";
+    yearLabel.text = @"2016";
     yearLabel.font = [UIFont systemFontOfSize:110];
     [bottomContentView addSubview:yearLabel];
     
+    // pickerView
     UIPickerView *pickerView = [[UIPickerView alloc] initWithFrame:bottomContentView.bounds];
     pickerView.delegate = self;
     pickerView.dataSource = self;
-    [pickerView selectRow:3 inComponent:0 animated:YES];// 如果初始的时候没有设置选择一行,不会显示中间两条线
+//    [pickerView selectRow:0 inComponent:0 animated:YES];// 如果初始的时候没有设置选择一行,不会显示中间两条线
+
     pickerView.showsSelectionIndicator = YES;
     [bottomContentView addSubview:pickerView];
-    
     
     // 4> 添加点击手势
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dimiss)];
     [self addGestureRecognizer:tapGesture];
     
-    
     // 5> 属性记录
     _bgView = bgView;
     _yearLabel = yearLabel;
+    _pickerView = pickerView;
+    
+    // 6> 默认滚动到当前日期
+    [self scrollToDate:nil animated:YES];
 }
 
 

@@ -30,12 +30,13 @@
 
 - (void)buttonClick:(UIButton *)button {
     
-    if (self.datePickerView == nil) {
-        self.datePickerView = [[YHDatePickerView alloc] initWithPickerStyle:YHDatePickerStyleYearMonthDayHourMinute];
-    }
+//    if (self.datePickerView == nil) {
+        self.datePickerView = [[YHDatePickerView alloc] initWithPickerStyle:YHDatePickerStyleYearMonthDay];
+//    }
     //[self.view addSubview:self.datePickerView];
    // self.datePickerView.timeUnitLabelTextColor = [UIColor whiteColor];
     [self.datePickerView show];
+//    self.datePickerView.scrollDate = [NSDate dateWithTimeInterval:86400 sinceDate:[NSDate date]];
 }
 
 

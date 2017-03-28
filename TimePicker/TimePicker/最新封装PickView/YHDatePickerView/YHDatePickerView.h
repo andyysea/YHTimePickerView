@@ -29,10 +29,9 @@ typedef NS_ENUM (NSInteger, YHDatePickerStyle){
 /** 日期对应的单位标签字体颜色 --> 默认橘色 */
 @property (nonatomic, strong) UIColor *timeUnitLabelTextColor;
 
-/** 最大时间限制 --> 默认 2049 */
-@property (nonatomic, copy) NSDate *maxLimitDate;
-/** 最小时间限制 --> 默认 1970 */
-@property (nonatomic, copy) NSDate *minLimitDate;
+/** 初始显示的日期 -> 默认显示当前的时间 */
+@property (nonatomic, copy) NSDate *scrollDate;
+
 
 /** 初始化方法,要设置样式*/
 - (instancetype)initWithPickerStyle:(YHDatePickerStyle)myDatePickerStyle;
