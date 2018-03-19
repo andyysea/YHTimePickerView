@@ -12,6 +12,8 @@
 
 #define  screen_width    [UIScreen mainScreen].bounds.size.width
 #define  screen_height   [UIScreen mainScreen].bounds.size.height
+#define  safeArea_height (((screen_width == 375) && (screen_height == 812)) ? 34 : 0)
+
 //#define  MiniYear        1970  //默认最小年份
 //#define  MaxYear         2049  //默认最大年份
 
@@ -322,10 +324,10 @@
         default:
             break;
     }
-
+    
     [self.pickerView reloadAllComponents];
     
-
+    
     // 设置选中的日期,用于确定的时候回调
     NSString *selectedDateStr = [NSString stringWithFormat:@"%@-%@-%@ %@:%@",self.yearArray[self.yearIndex],self.monthArray[self.monthIndex],self.dayArray[self.dayIndex],self.hourArray[self.hourIndex],self.minuteArray[self.minuteIndex]];
 //    NSLog(@"dateStr -> %@", selectedDateStr);
@@ -480,7 +482,7 @@
 #pragma mark - 初始化之后显示调用的方法
 - (void)show {
     [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:self];
-    CGFloat height = 264;
+    CGFloat height = 264 + safeArea_height;
     CGAffineTransform transform = self.bgView.transform;
     transform = CGAffineTransformMakeTranslation(0, - height);
     [UIView animateWithDuration:.25 animations:^{
@@ -530,7 +532,7 @@
         NSString *numStr = [NSString stringWithFormat:@"%02zd", i];
         [_yearArray addObject:numStr];      // 默认一共多少年
     }
-
+    
 }
 
 
@@ -582,12 +584,12 @@
         default:
             break;
     }
-
+    
     [self.pickerView reloadAllComponents];
     for (NSInteger index = 0; index < indexArray.count; index++) {
         NSInteger component = index;
         NSInteger row = [indexArray[index] integerValue];
-//        NSLog(@"row - %zd --- component - %zd", row, component);
+        //        NSLog(@"row - %zd --- component - %zd", row, component);
         [self.pickerView selectRow:row inComponent:component animated:NO];
     }
 }
@@ -596,8 +598,9 @@
 - (void)setupUI {
     self.backgroundColor = [UIColor colorWithWhite:.5 alpha:.5];
     self.frame = CGRectMake(0, 0, screen_width, screen_height);
-
-    CGFloat height = 264;
+    
+    
+    CGFloat height = 264 + safeArea_height;
     CGFloat topBar_height = 44;
     
     // 1> 添加一个最底层的背景视图
@@ -635,11 +638,11 @@
     [bottomContentView addSubview:yearLabel];
     
     // pickerView
-    UIPickerView *pickerView = [[UIPickerView alloc] initWithFrame:bottomContentView.bounds];
+    UIPickerView *pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, screen_width, height - topBar_height - safeArea_height)];
     pickerView.delegate = self;
     pickerView.dataSource = self;
 //    [pickerView selectRow:0 inComponent:0 animated:YES];// 如果初始的时候没有设置选择一行,不会显示中间两条线
-
+    
     pickerView.showsSelectionIndicator = YES;
     [bottomContentView addSubview:pickerView];
     
@@ -665,3 +668,4 @@
 
 
 @end
+
