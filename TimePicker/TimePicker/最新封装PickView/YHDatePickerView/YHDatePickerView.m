@@ -83,7 +83,7 @@
 /** 滚动到指定日期 */
 - (void)setScrollDate:(NSDate *)scrollDate {
     _scrollDate = scrollDate;
-    [self scrollToDate:scrollDate animated:YES];
+    [self scrollToDate:scrollDate animated:YES isSelectedDate:NO];
 }
 
 /** 设置工具栏的颜色 */
@@ -332,6 +332,9 @@
     NSString *selectedDateStr = [NSString stringWithFormat:@"%@-%@-%@ %@:%@",self.yearArray[self.yearIndex],self.monthArray[self.monthIndex],self.dayArray[self.dayIndex],self.hourArray[self.hourIndex],self.minuteArray[self.minuteIndex]];
 //    NSLog(@"dateStr -> %@", selectedDateStr);
     self.selectedDate = [NSDate date:selectedDateStr withFormat:@"yyyy-MM-dd HH:mm"];
+    // **** 这里增加对比一下看看是否选中的日期在最小和最大限制日期内部 ****
+    [self scrollToDate:self.selectedDate animated:YES isSelectedDate:YES];
+    
 }
 
 
@@ -539,7 +542,7 @@
 
 
 #pragma mark - 滚动到对应时间的位置,默认为滚动到当前时间
-- (void)scrollToDate:(NSDate *)date animated:(BOOL)animated {
+- (void)scrollToDate:(NSDate *)date animated:(BOOL)animated isSelectedDate:(BOOL)isSelectedDate {
     if (!date) {
         date = [NSDate date];
     }
@@ -549,6 +552,10 @@
     }
     if ([date compare:self.maxLimitDate] == NSOrderedDescending) {
         date = self.maxLimitDate;
+    }
+    // 如果是最后选中的时候调用该方法,那么要判断是否在最大或者最小的限制日期范围内
+    if (isSelectedDate) {
+        self.selectedDate = date;
     }
     
     [self daysOfTheMonth:date.month InTheYear:date.year];
@@ -590,7 +597,7 @@
         NSInteger component = index;
         NSInteger row = [indexArray[index] integerValue];
         //        NSLog(@"row - %zd --- component - %zd", row, component);
-        [self.pickerView selectRow:row inComponent:component animated:NO];
+        [self.pickerView selectRow:row inComponent:component animated:animated];
     }
 }
 
@@ -661,7 +668,7 @@
     _bottomContentView = bottomContentView;
     
     // 6> 默认滚动到当前日期
-    [self scrollToDate:nil animated:YES];
+    [self scrollToDate:nil animated:YES isSelectedDate:NO];
 }
 
 
